@@ -1,0 +1,159 @@
+.
+├── .gradle
+│   ├── 6.5
+│   │   ├── executionHistory
+│   │   │   ├── executionHistory.bin
+│   │   │   └── executionHistory.lock
+│   │   ├── fileChanges
+│   │   │   └── last-build.bin
+│   │   ├── fileContent
+│   │   │   └── fileContent.lock
+│   │   ├── fileHashes
+│   │   │   ├── fileHashes.bin
+│   │   │   ├── fileHashes.lock
+│   │   │   └── resourceHashesCache.bin
+│   │   ├── gc.properties
+│   │   ├── javaCompile
+│   │   │   ├── classAnalysis.bin
+│   │   │   ├── jarAnalysis.bin
+│   │   │   ├── javaCompile.lock
+│   │   │   └── taskHistory.bin
+│   │   └── vcsMetadata-1
+│   ├── buildOutputCleanup
+│   │   ├── buildOutputCleanup.lock
+│   │   ├── cache.properties
+│   │   └── outputFiles.bin
+│   ├── checksums
+│   │   ├── checksums.lock
+│   │   ├── md5-checksums.bin
+│   │   └── sha1-checksums.bin
+│   └── vcs-1
+│       └── gc.properties
+├── LICENSE
+├── build
+│   ├── classes
+│   │   └── java
+│   │       └── main
+│   │           ├── META-INF
+│   │           │   └── extensions.idx
+│   │           └── com
+│   │               └── sythelib
+│   │                   └── plugins
+│   │                       └── sythelibapi
+│   │                           ├── PSytheLibConfig.class
+│   │                           ├── PSytheLibPlugin.class
+│   │                           ├── beans
+│   │                           │   ├── AnimationBean.class
+│   │                           │   ├── CanvasBean.class
+│   │                           │   ├── EquipmentBean$1.class
+│   │                           │   ├── EquipmentBean.class
+│   │                           │   ├── ErrorBean.class
+│   │                           │   ├── GameObjectBean.class
+│   │                           │   ├── HealthBean.class
+│   │                           │   ├── InventoryBean.class
+│   │                           │   ├── ItemBean.class
+│   │                           │   ├── NPCBean.class
+│   │                           │   ├── PlayerBean.class
+│   │                           │   ├── PolygonBean.class
+│   │                           │   ├── PositionBean.class
+│   │                           │   ├── Skill_aux.class
+│   │                           │   ├── SkillsBean.class
+│   │                           │   ├── TileSceneBean.class
+│   │                           │   ├── VarbitBean.class
+│   │                           │   └── VarplayerBean.class
+│   │                           └── httpserver
+│   │                               ├── ClientThreadWrapper.class
+│   │                               ├── Controller.class
+│   │                               ├── PSytheLibServer.class
+│   │                               ├── Route.class
+│   │                               ├── RouteImpl.class
+│   │                               └── controllers
+│   │                                   ├── AnimationController.class
+│   │                                   ├── EquipmentController.class
+│   │                                   ├── GameObjectController.class
+│   │                                   ├── HealthController.class
+│   │                                   ├── InventoryController.class
+│   │                                   ├── NPCController.class
+│   │                                   ├── PlayerController.class
+│   │                                   ├── PositionController.class
+│   │                                   ├── SkillsController.class
+│   │                                   ├── TileSceneController.class
+│   │                                   ├── VarbitController.class
+│   │                                   └── VarplayerController.class
+│   ├── generated
+│   │   └── sources
+│   │       ├── annotationProcessor
+│   │       │   └── java
+│   │       │       └── main
+│   │       └── headers
+│   │           └── java
+│   │               └── main
+│   ├── libs
+│   │   └── sythelib-api-1.0.1.jar
+│   ├── resources
+│   │   └── main
+│   │       └── LICENSE
+│   └── tmp
+│       ├── compileJava
+│       │   └── source-classes-mapping.txt
+│       └── jar
+│           └── MANIFEST.MF
+├── build.gradle.kts
+├── gradle
+│   └── wrapper
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
+├── gradlew
+├── gradlew.bat
+├── src
+│   └── main
+│       ├── java
+│       │   └── com
+│       │       ├── sythelib
+│       │       │   └── plugins
+│       │       │       └── sythelibapi
+│       │       │           ├── PSytheLibConfig.java
+│       │       │           ├── PSytheLibPlugin.java
+│       │       │           ├── beans
+│       │       │           │   ├── AnimationBean.java
+│       │       │           │   ├── CanvasBean.java
+│       │       │           │   ├── EquipmentBean.java
+│       │       │           │   ├── ErrorBean.java
+│       │       │           │   ├── GameObjectBean.java
+│       │       │           │   ├── HealthBean.java
+│       │       │           │   ├── InventoryBean.java
+│       │       │           │   ├── ItemBean.java
+│       │       │           │   ├── NPCBean.java
+│       │       │           │   ├── PlayerBean.java
+│       │       │           │   ├── PolygonBean.java
+│       │       │           │   ├── PositionBean.java
+│       │       │           │   ├── SkillsBean.java
+│       │       │           │   ├── TileSceneBean.java
+│       │       │           │   ├── VarbitBean.java
+│       │       │           │   └── VarplayerBean.java
+│       │       │           └── httpserver
+│       │       │               ├── ClientThreadWrapper.java
+│       │       │               ├── Controller.java
+│       │       │               ├── PSytheLibServer.java
+│       │       │               ├── Route.java
+│       │       │               ├── RouteImpl.java
+│       │       │               └── controllers
+│       │       │                   ├── AnimationController.java
+│       │       │                   ├── EquipmentController.java
+│       │       │                   ├── GameObjectController.java
+│       │       │                   ├── HealthController.java
+│       │       │                   ├── InventoryController.java
+│       │       │                   ├── NPCController.java
+│       │       │                   ├── PlayerController.java
+│       │       │                   ├── PositionController.java
+│       │       │                   ├── SkillsController.java
+│       │       │                   ├── TileSceneController.java
+│       │       │                   ├── VarbitController.java
+│       │       │                   └── VarplayerController.java
+│       │       └── thatgamerblue
+│       │           └── oprs
+│       └── resources
+│           └── LICENSE
+└── tree.txt
+
+52 directories, 104 files
