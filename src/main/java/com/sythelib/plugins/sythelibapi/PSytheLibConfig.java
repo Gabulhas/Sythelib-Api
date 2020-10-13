@@ -42,6 +42,6 @@ public interface PSytheLibConfig extends Config
 	)
 	default String port()
 	{
-		return "8081";
+		return "4555";
 	}
 }
