@@ -90,4 +90,31 @@ public class MenuEntrySwapperController implements Controller
         return gson.toJson(SuccessBean.from("Successfully removed Menu Entry"));
     }
 
+    @Route("/togglemenuentry")
+    public String togglemenuentry(Map<String, String> params)
+    {
+        String option;
+        String target;
+
+        option = params.getOrDefault("option", "");
+        target = params.getOrDefault("target", "");
+
+        if (option.equals("") || target.equals(""))
+        {
+            return gson.toJson(ErrorBean.from("Get parameter missing. Required: priority, option, target"));
+        }
+        option = option.replace("%20", " ");
+        target = target.replace("%20", " ");
+
+        final AbstractComparableEntry prioEntry = newBaseComparableEntry(option, target);
+
+        if (customSwaps.containsKey(prioEntry))
+        {
+            return removemenuentry(params);
+        } else
+        {
+            return addmenuentry(params);
+        }
+    }
+
 }

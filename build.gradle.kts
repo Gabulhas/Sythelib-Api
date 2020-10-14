@@ -30,13 +30,13 @@ plugins {
 }
 
 group = "com.sythelib.plugins.sythelibapi"
-version = "1.0.1"
+version = "1.0.2"
 
 project.extra["PluginProvider"] = "sythelib"
-project.extra["ProjectUrl"] = ""
+project.extra["ProjectUrl"] = "https://gitlab.com/Gabulhas/sythelib-api"
 project.extra["PluginLicense"] = "BSD 2-Clause License"
-project.extra["PluginName"] = "psythelib-api"
-project.extra["PluginDescription"] = "OpenOSRS API for PSytheLib"
+project.extra["PluginName"] = "sythelib-api"
+project.extra["PluginDescription"] = "OpenOSRS API for SytheLib"
 
 repositories {
     jcenter {
