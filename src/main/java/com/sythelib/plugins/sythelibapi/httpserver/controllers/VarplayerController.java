@@ -23,6 +23,12 @@ public class VarplayerController implements Controller
     @Inject
     private ClientThreadWrapper wrapper;
 
+
+    /***
+     *
+     * @param params
+     * @return
+     */
     @Route("/varplayer")
     public String varplayer(Map<String, String> params)
     {

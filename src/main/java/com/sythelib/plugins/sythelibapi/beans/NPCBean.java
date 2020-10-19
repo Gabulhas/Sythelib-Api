@@ -10,7 +10,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *    
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -25,38 +25,41 @@
 
 package com.sythelib.plugins.sythelibapi.beans;
 
-import java.awt.Rectangle;
-import java.awt.Shape;
 import lombok.Value;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
 import net.runelite.api.Perspective;
 
+import java.awt.Shape;
+
 @Value
 public class NPCBean
 {
-	String name;
-	int combatLvl;
-	int healthRatio;
-	int healthScale;
-	String interacting;
-	PositionBean pos;
-	int index;
-	CanvasBean canvas;
+    String name;
+    int combatLvl;
+    int healthRatio;
+    int healthScale;
+    String interacting;
+    PositionBean pos;
+    int index;
+    int id;
+    CanvasBean canvas;
 
-	public static NPCBean fromNPC(NPC npc, Client client)
-	{
-		String interacting = npc.getInteracting() != null && npc.getInteracting().getName() != null ? npc.getInteracting().getName() : "";
-		Shape clickbox = Perspective.getClickbox(client, npc.getModel(), npc.getOrientation(), npc.getLocalLocation());
-		return new NPCBean(
-			npc.getName(),
-			npc.getCombatLevel(),
-			npc.getHealthRatio(),
-			npc.getHealthScale(),
-			interacting,
-			PositionBean.fromWorldPoint(npc.getWorldLocation()),
-			npc.getIndex(),
-			CanvasBean.fromClickbox(clickbox)
-		);
-	}
+    public static NPCBean fromNPC(NPC npc, Client client)
+    {
+        String interacting = npc.getInteracting() != null && npc.getInteracting().getName() != null ? npc.getInteracting().getName() : "";
+        Shape clickbox = Perspective.getClickbox(client, npc.getModel(), npc.getOrientation(), npc.getLocalLocation());
+
+        return new NPCBean(
+                npc.getName(),
+                npc.getCombatLevel(),
+                npc.getHealthRatio(),
+                npc.getHealthScale(),
+                interacting,
+                PositionBean.fromWorldPoint(npc.getWorldLocation()),
+                npc.getIndex(),
+                npc.getId(),
+                CanvasBean.fromClickbox(clickbox)
+        );
+    }
 }
