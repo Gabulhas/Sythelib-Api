@@ -148,6 +148,11 @@ public class GameObjectController implements Controller
 
         });
 
+        if (bean == null)
+        {
+
+            return gson.toJson(ErrorBean.from("number format exception parsing a parameter"));
+        }
         return gson.toJson(bean);
     }
 

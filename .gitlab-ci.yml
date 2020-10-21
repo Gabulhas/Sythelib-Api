@@ -1,0 +1,47 @@
+image: java:8-jdk
+
+stages:
+  - build
+  - test
+  - release
+
+before_script:
+  #  - echo `pwd` # debug
+  #  - echo "$CI_BUILD_NAME, $CI_BUILD_REF_NAME $CI_BUILD_STAGE" # debug
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+
+cache:
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
+
+build:
+  stage: build
+  script:
+    - echo 'building'
+    - ./gradlew assemble
+  artifacts:
+    paths:
+      - build/libs/*.jar
+    expire_in: 1 week
+  only:
+    - master
+
+test:
+  stage: test
+  script:
+    - echo 'testing'
+    - ./gradlew check
+
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  script:
+    - |
+      release-cli create --name "Release $CI_COMMIT_TAG" --tag-name $CI_COMMIT_TAG \
+        --assets-link "{\"name\":\"Executable file\",\"url\":\"https://gitlab.com/some/repo/-/jobs/`cat CI_JOB_ID.txt`/build/libs/sythelib-api-1.0.2.api\"}"
+  rules:
+    - if: $CI_COMMIT_TAG
+
+after_script:
+  - echo "End CI"
