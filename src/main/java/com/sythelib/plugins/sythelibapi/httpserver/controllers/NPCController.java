@@ -26,14 +26,17 @@
 package com.sythelib.plugins.sythelibapi.httpserver.controllers;
 
 import com.google.gson.Gson;
+import com.sythelib.plugins.sythelibapi.beans.ErrorBean;
 import com.sythelib.plugins.sythelibapi.beans.NPCBean;
 import com.sythelib.plugins.sythelibapi.httpserver.ClientThreadWrapper;
 import com.sythelib.plugins.sythelibapi.httpserver.Controller;
 import com.sythelib.plugins.sythelibapi.httpserver.Route;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
+import net.runelite.api.coords.WorldPoint;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
@@ -53,12 +56,24 @@ public class NPCController implements Controller
     @Route("/npcs")
     public String npcs(Map<String, String> params)
     {
+        int id;
+        String name;
+        try
+        {
+            id = Integer.parseInt(params.getOrDefault("id", "-1"));
+            name = params.getOrDefault("name", "");
+
+        } catch (NumberFormatException ex)
+        {
+            return gson.toJson(ErrorBean.from("number format exception parsing " + params.get("id")));
+        }
         AtomicReference<List<NPCBean>> beans = new AtomicReference<>();
 
         // this is running on client thread so npcs dont mutate state while we're looking at them
         wrapper.run(() -> {
             List<NPC> npcs = client.getNpcs();
-            beans.set(npcs.stream().map(npc -> NPCBean.fromNPC(npc, client)).collect(Collectors.toList()));
+            List<NPC> filtered = filter(npcs, id, name);
+            beans.set(filtered.stream().map(npc -> NPCBean.fromNPC(npc, client)).collect(Collectors.toList()));
         });
 
         return gson.toJson(beans.get());
@@ -70,10 +85,23 @@ public class NPCController implements Controller
 
         AtomicReference<NPCBean> bean = new AtomicReference<>();
 
+        int id;
+        String name;
+        try
+        {
+            id = Integer.parseInt(params.getOrDefault("id", "-1"));
+            name = params.getOrDefault("name", "");
+
+        } catch (NumberFormatException ex)
+        {
+            return gson.toJson(ErrorBean.from("number format exception parsing " + params.get("id")));
+        }
+
         wrapper.run(() -> {
 
             List<NPC> npcs = client.getNpcs();
-            NPC nearest = nearestToPoint(npcs, client.getLocalPlayer().getWorldLocation());
+            List<NPC> filtered = filter(npcs, id, name);
+            NPC nearest = nearestToPoint(filtered, client.getLocalPlayer().getWorldLocation());
             bean.set(NPCBean.fromNPC(nearest, client));
         });
 
@@ -84,15 +112,49 @@ public class NPCController implements Controller
     @Route("/npcs/neareast_to/point")
     public String npcs_nearest(Map<String, String> params)
     {
+        AtomicReference<NPCBean> bean = new AtomicReference<>();
 
-        AtomicReference<List<NPCBean>> beans = new AtomicReference<>();
+        int id, x, y, z;
+        String name;
+        try
+        {
+            id = Integer.parseInt(params.getOrDefault("id", "-1"));
+            name = params.getOrDefault("name", "");
+            x = Integer.parseInt(params.getOrDefault("x", "-1"));
+            y = Integer.parseInt(params.getOrDefault("y", "-1"));
+            z = Integer.parseInt(params.getOrDefault("z", "-1"));
+
+        } catch (NumberFormatException ex)
+        {
+            return gson.toJson(ErrorBean.from("number format exception parsing " + params.get("id")));
+        }
 
         // this is running on client thread so npcs dont mutate state while we're looking at them
         wrapper.run(() -> {
             List<NPC> npcs = client.getNpcs();
-            beans.set(npcs.stream().map(npc -> NPCBean.fromNPC(npc, client)).collect(Collectors.toList()));
+            List<NPC> filtered = filter(npcs, id, name);
+            NPC nearest = nearestToPoint(filtered, new WorldPoint(x, y, z));
+            bean.set(NPCBean.fromNPC(nearest, client));
         });
 
-        return gson.toJson(beans.get());
+        return gson.toJson(bean.get());
+    }
+
+    public List<NPC> filter(List<NPC> npcs, int id, String name)
+    {
+
+        List<NPC> filtered = new ArrayList<>();
+
+        for (NPC npc : npcs)
+        {
+            if ((id == -1 || npc.getId() == id) && (name.equals("") || npc.getName().equals(name)))
+            {
+                filtered.add(npc);
+            }
+        }
+        return filtered;
     }
 }
+
+
+

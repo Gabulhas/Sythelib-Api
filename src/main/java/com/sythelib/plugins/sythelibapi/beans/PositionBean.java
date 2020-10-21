@@ -33,10 +33,11 @@ public class PositionBean
 {
 	int x;
 	int y;
+	int z;
 
 	public static PositionBean fromWorldPoint(WorldPoint wp)
 	{
-		return new PositionBean(wp.getX(), wp.getY());
+		return new PositionBean(wp.getX(), wp.getY(), wp.getPlane());
 	}
 
 }
