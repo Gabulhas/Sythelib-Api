@@ -19,7 +19,7 @@ build:
   stage: build
   script:
     - echo 'building'
-    - ./gradlew assemble
+    - ./gradlew build
   artifacts:
     paths:
       - build/libs/*.jar
