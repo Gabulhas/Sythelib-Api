@@ -38,4 +38,5 @@ public class PositionBean
 	{
 		return new PositionBean(wp.getX(), wp.getY());
 	}
+
 }

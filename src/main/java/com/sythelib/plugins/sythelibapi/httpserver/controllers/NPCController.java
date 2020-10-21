@@ -10,7 +10,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *    
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -30,34 +30,69 @@ import com.sythelib.plugins.sythelibapi.beans.NPCBean;
 import com.sythelib.plugins.sythelibapi.httpserver.ClientThreadWrapper;
 import com.sythelib.plugins.sythelibapi.httpserver.Controller;
 import com.sythelib.plugins.sythelibapi.httpserver.Route;
+import net.runelite.api.Client;
+import net.runelite.api.NPC;
+
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
-import net.runelite.api.Client;
-import net.runelite.api.NPC;
+
+import static com.sythelib.plugins.sythelibapi.utils.LocatableUtils.nearestToPoint;
 
 public class NPCController implements Controller
 {
-	@Inject
-	private Gson gson;
-	@Inject
-	private Client client;
-	@Inject
-	private ClientThreadWrapper wrapper;
+    @Inject
+    private Gson gson;
+    @Inject
+    private Client client;
+    @Inject
+    private ClientThreadWrapper wrapper;
 
-	@Route("/npcs")
-	public String npcs(Map<String, String> params)
-	{
-		AtomicReference<List<NPCBean>> beans = new AtomicReference<>();
+    @Route("/npcs")
+    public String npcs(Map<String, String> params)
+    {
+        AtomicReference<List<NPCBean>> beans = new AtomicReference<>();
 
-		// this is running on client thread so npcs dont mutate state while we're looking at them
-		wrapper.run(() -> {
-			List<NPC> npcs = client.getNpcs();
-			beans.set(npcs.stream().map(npc -> NPCBean.fromNPC(npc, client)).collect(Collectors.toList()));
-		});
+        // this is running on client thread so npcs dont mutate state while we're looking at them
+        wrapper.run(() -> {
+            List<NPC> npcs = client.getNpcs();
+            beans.set(npcs.stream().map(npc -> NPCBean.fromNPC(npc, client)).collect(Collectors.toList()));
+        });
 
-		return gson.toJson(beans.get());
-	}
+        return gson.toJson(beans.get());
+    }
+
+    @Route("/npcs/neareast_to/player")
+    public String npcs_nearest_to_player(Map<String, String> params)
+    {
+
+        AtomicReference<NPCBean> bean = new AtomicReference<>();
+
+        wrapper.run(() -> {
+
+            List<NPC> npcs = client.getNpcs();
+            NPC nearest = nearestToPoint(npcs, client.getLocalPlayer().getWorldLocation());
+            bean.set(NPCBean.fromNPC(nearest, client));
+        });
+
+
+        return gson.toJson(bean.get());
+    }
+
+    @Route("/npcs/neareast_to/point")
+    public String npcs_nearest(Map<String, String> params)
+    {
+
+        AtomicReference<List<NPCBean>> beans = new AtomicReference<>();
+
+        // this is running on client thread so npcs dont mutate state while we're looking at them
+        wrapper.run(() -> {
+            List<NPC> npcs = client.getNpcs();
+            beans.set(npcs.stream().map(npc -> NPCBean.fromNPC(npc, client)).collect(Collectors.toList()));
+        });
+
+        return gson.toJson(beans.get());
+    }
 }
