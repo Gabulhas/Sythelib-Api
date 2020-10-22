@@ -42,7 +42,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-import static com.sythelib.plugins.sythelibapi.utils.LocatableUtils.nearestToPoint;
+import static com.sythelib.plugins.sythelibapi.utils.distanceUtils.nearestToPoint;
 
 public class NPCController implements Controller
 {
@@ -61,7 +61,7 @@ public class NPCController implements Controller
         try
         {
             id = Integer.parseInt(params.getOrDefault("id", "-1"));
-            name = params.getOrDefault("name", "");
+            name = params.getOrDefault("name", "").replace("%20", " ");
 
         } catch (NumberFormatException ex)
         {
@@ -90,7 +90,7 @@ public class NPCController implements Controller
         try
         {
             id = Integer.parseInt(params.getOrDefault("id", "-1"));
-            name = params.getOrDefault("name", "");
+            name = params.getOrDefault("name", "").replace("%20", " ");
 
         } catch (NumberFormatException ex)
         {
@@ -119,7 +119,7 @@ public class NPCController implements Controller
         try
         {
             id = Integer.parseInt(params.getOrDefault("id", "-1"));
-            name = params.getOrDefault("name", "");
+            name = params.getOrDefault("name", "").replace("%20", " ");
             x = Integer.parseInt(params.getOrDefault("x", "-1"));
             y = Integer.parseInt(params.getOrDefault("y", "-1"));
             z = Integer.parseInt(params.getOrDefault("z", "-1"));

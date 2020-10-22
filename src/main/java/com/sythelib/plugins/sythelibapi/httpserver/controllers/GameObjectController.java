@@ -46,7 +46,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
-import static com.sythelib.plugins.sythelibapi.utils.LocatableUtils.nearestToPoint;
+import static com.sythelib.plugins.sythelibapi.utils.distanceUtils.nearestToPoint;
 
 public class GameObjectController implements Controller
 {
@@ -72,7 +72,8 @@ public class GameObjectController implements Controller
         try
         {
             id = Integer.parseInt(params.getOrDefault("id", "-1"));
-            name = params.getOrDefault("name", "");
+            name = params.getOrDefault("name", "").replace("%20", " ");
+            ;
 
         } catch (NumberFormatException ex)
         {
@@ -100,7 +101,8 @@ public class GameObjectController implements Controller
         try
         {
             id = Integer.parseInt(params.getOrDefault("id", "-1"));
-            name = params.getOrDefault("name", "");
+            name = params.getOrDefault("name", "").replace("%20", " ");
+            ;
 
         } catch (NumberFormatException ex)
         {
@@ -129,7 +131,7 @@ public class GameObjectController implements Controller
         try
         {
             id = Integer.parseInt(params.getOrDefault("id", "-1"));
-            name = params.getOrDefault("name", "");
+            name = params.getOrDefault("name", "").replace("%20", " ");
 
             x = Integer.parseInt(params.getOrDefault("x", "-1"));
             y = Integer.parseInt(params.getOrDefault("y", "-1"));
