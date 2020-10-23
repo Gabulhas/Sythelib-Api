@@ -57,4 +57,5 @@ public class CanvasBean
 
 		return null;
 	}
+
 }
