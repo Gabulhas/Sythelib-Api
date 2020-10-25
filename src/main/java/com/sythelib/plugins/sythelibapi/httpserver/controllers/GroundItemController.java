@@ -58,22 +58,38 @@ public class GroundItemController implements Controller
         return gson.toJson(list);
     }
 
-    @Route("/grounditems/nearest_to/player")
-    public String grounditems_nearest_to_player(Map<String, String> params)
+    @Route("/grounditems/nearest")
+    public String grounditens_nearest(Map<String, String> params)
     {
-        AtomicReference<GroundObjectBean> bean = new AtomicReference<>();
 
-        int id;
+        int id, x, y, z;
         String name;
         try
         {
             id = Integer.parseInt(params.getOrDefault("id", "-1"));
             name = params.getOrDefault("name", "").replace("%20", " ");
+            x = Integer.parseInt(params.getOrDefault("x", "-1"));
+            y = Integer.parseInt(params.getOrDefault("y", "-1"));
+            z = Integer.parseInt(params.getOrDefault("z", "0"));
 
         } catch (NumberFormatException ex)
         {
             return gson.toJson(ErrorBean.from("number format exception parsing " + params.get("id")));
         }
+
+        if (x == -1 || y == -1)
+        {
+
+            return grounditems_nearest_to_player(id, name);
+        }
+        return grounditems_nearest_to_point(id, name, x, y, z);
+
+
+    }
+
+    public String grounditems_nearest_to_player(int id, String name)
+    {
+        AtomicReference<GroundObjectBean> bean = new AtomicReference<>();
 
         wrapper.run(() ->
         {
@@ -85,25 +101,10 @@ public class GroundItemController implements Controller
         return gson.toJson(bean.get());
     }
 
-    @Route("/grounditems/nearest_to/point")
-    public String grounditems_nearest_to_point(Map<String, String> params)
+    public String grounditems_nearest_to_point(int id, String name, int x, int y, int z)
     {
         AtomicReference<GroundObjectBean> bean = new AtomicReference<>();
 
-        int id, x, y, z;
-        String name;
-        try
-        {
-            id = Integer.parseInt(params.getOrDefault("id", "-1"));
-            name = params.getOrDefault("name", "").replace("%20", " ");
-            x = Integer.parseInt(params.getOrDefault("x", "-1"));
-            y = Integer.parseInt(params.getOrDefault("y", "-1"));
-            z = Integer.parseInt(params.getOrDefault("z", "-1"));
-
-        } catch (NumberFormatException ex)
-        {
-            return gson.toJson(ErrorBean.from("number format exception parsing " + params.get("id")));
-        }
 
         wrapper.run(() ->
         {

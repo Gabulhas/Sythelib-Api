@@ -47,7 +47,6 @@ public class TileSceneController implements Controller
         try
         {
             x = Integer.parseInt(params.getOrDefault("x", "-1"));
-
             y = Integer.parseInt(params.getOrDefault("y", "-1"));
 
         }

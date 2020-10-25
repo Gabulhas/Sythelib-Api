@@ -31,8 +31,6 @@ public class VarbitController implements Controller
         try
         {
             varbit_query = Integer.parseInt(params.getOrDefault("varbit", "-1"));
-
-
         }
         catch (NumberFormatException ex)
         {

@@ -79,23 +79,39 @@ public class NPCController implements Controller
         return gson.toJson(beans.get());
     }
 
-    @Route("/npcs/neareast_to/player")
-    public String npcs_nearest_to_player(Map<String, String> params)
+    @Route("/npcs/nearest")
+    public String npcs_nearest(Map<String, String> params)
     {
 
-        AtomicReference<NPCBean> bean = new AtomicReference<>();
-
-        int id;
+        int id, x, y, z;
         String name;
         try
         {
             id = Integer.parseInt(params.getOrDefault("id", "-1"));
             name = params.getOrDefault("name", "").replace("%20", " ");
+            x = Integer.parseInt(params.getOrDefault("x", "-1"));
+            y = Integer.parseInt(params.getOrDefault("y", "-1"));
+            z = Integer.parseInt(params.getOrDefault("z", "0"));
 
         } catch (NumberFormatException ex)
         {
             return gson.toJson(ErrorBean.from("number format exception parsing " + params.get("id")));
         }
+
+        if (x == -1 || y == -1)
+        {
+
+            return npcs_nearest_to_player(id, name);
+        }
+        return npcs_nearest_to_point(id, name, x, y, z);
+
+
+    }
+
+    public String npcs_nearest_to_player(int id, String name)
+    {
+
+        AtomicReference<NPCBean> bean = new AtomicReference<>();
 
         wrapper.run(() -> {
 
@@ -109,25 +125,10 @@ public class NPCController implements Controller
         return gson.toJson(bean.get());
     }
 
-    @Route("/npcs/neareast_to/point")
-    public String npcs_nearest(Map<String, String> params)
+    public String npcs_nearest_to_point(int id, String name, int x, int y, int z)
     {
         AtomicReference<NPCBean> bean = new AtomicReference<>();
 
-        int id, x, y, z;
-        String name;
-        try
-        {
-            id = Integer.parseInt(params.getOrDefault("id", "-1"));
-            name = params.getOrDefault("name", "").replace("%20", " ");
-            x = Integer.parseInt(params.getOrDefault("x", "-1"));
-            y = Integer.parseInt(params.getOrDefault("y", "-1"));
-            z = Integer.parseInt(params.getOrDefault("z", "-1"));
-
-        } catch (NumberFormatException ex)
-        {
-            return gson.toJson(ErrorBean.from("number format exception parsing " + params.get("id")));
-        }
 
         // this is running on client thread so npcs dont mutate state while we're looking at them
         wrapper.run(() -> {

@@ -90,25 +90,38 @@ public class GameObjectController implements Controller
         return gson.toJson(list);
     }
 
-    @Route("/gameobjects/nearest_to/player")
-    public String gameobjects_nearst_to_player(Map<String, String> params)
+    @Route("/gameobjects/nearest")
+    public String gameobjects_nearest(Map<String, String> params)
     {
-        AtomicReference<GameObjectBean> bean = new AtomicReference<>();
 
-        final GameObjectBean nearest = null;
-        int id;
+        int id, x, y, z;
         String name;
         try
         {
             id = Integer.parseInt(params.getOrDefault("id", "-1"));
             name = params.getOrDefault("name", "").replace("%20", " ");
-            ;
+            x = Integer.parseInt(params.getOrDefault("x", "-1"));
+            y = Integer.parseInt(params.getOrDefault("y", "-1"));
+            z = Integer.parseInt(params.getOrDefault("z", "0"));
 
         } catch (NumberFormatException ex)
         {
             return gson.toJson(ErrorBean.from("number format exception parsing " + params.get("id")));
         }
 
+        if (x == -1 || y == -1)
+        {
+
+            return gameobjects_nearst_to_player(id, name);
+        }
+        return gameobjects_nearst_to_point(id, name, x, y, z);
+
+
+    }
+
+    public String gameobjects_nearst_to_player(int id, String name)
+    {
+        AtomicReference<GameObjectBean> bean = new AtomicReference<>();
         wrapper.run(() ->
         {
             Set<GameObject> objects = getGameObjects(id, name, client);
@@ -120,27 +133,9 @@ public class GameObjectController implements Controller
         return gson.toJson(bean);
     }
 
-    @Route("/gameobjects/nearest_to/point")
-    public String gameobjects_nearst_to_point(Map<String, String> params)
+    public String gameobjects_nearst_to_point(int id, String name, int x, int y, int z)
     {
         AtomicReference<GameObjectBean> bean = new AtomicReference<>();
-
-        final GameObjectBean nearest = null;
-        int id, x, y, z;
-        String name;
-        try
-        {
-            id = Integer.parseInt(params.getOrDefault("id", "-1"));
-            name = params.getOrDefault("name", "").replace("%20", " ");
-
-            x = Integer.parseInt(params.getOrDefault("x", "-1"));
-            y = Integer.parseInt(params.getOrDefault("y", "-1"));
-            z = Integer.parseInt(params.getOrDefault("z", "-1"));
-
-        } catch (NumberFormatException ex)
-        {
-            return gson.toJson(ErrorBean.from("number format exception parsing a parameter"));
-        }
 
         wrapper.run(() ->
         {

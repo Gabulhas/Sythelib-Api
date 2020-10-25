@@ -67,7 +67,6 @@ repositories {
             includeGroupByRegex("com\\.openosrs.*")
         }
     }
-    maven("https://dl.bintray.com/oprs/")
 }
 
 dependencies {
