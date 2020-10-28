@@ -100,15 +100,14 @@ public class NPCController implements Controller
 
         if (x == -1 || y == -1)
         {
-
-            return npcs_nearest_to_player(id, name);
+            return npcs_nearest_aux(id, name, client.getLocalPlayer().getWorldLocation());
         }
-        return npcs_nearest_to_point(id, name, x, y, z);
+        return npcs_nearest_aux(id, name, new WorldPoint(x, y, z));
 
 
     }
 
-    public String npcs_nearest_to_player(int id, String name)
+    public String npcs_nearest_aux(int id, String name, WorldPoint point)
     {
 
         AtomicReference<NPCBean> bean = new AtomicReference<>();
@@ -117,29 +116,24 @@ public class NPCController implements Controller
 
             List<NPC> npcs = client.getNpcs();
             List<NPC> filtered = filter(npcs, id, name);
-            NPC nearest = nearestToPoint(filtered, client.getLocalPlayer().getWorldLocation());
-            bean.set(NPCBean.fromNPC(nearest, client));
+            NPC nearest = nearestToPoint(filtered, point);
+            if (nearest == null)
+            {
+                bean.set(null);
+            } else
+            {
+                bean.set(NPCBean.fromNPC(nearest, client));
+            }
         });
+        if (bean.get() == null)
+        {
+            return gson.toJson(ErrorBean.from("not found"));
+        }
 
 
         return gson.toJson(bean.get());
     }
 
-    public String npcs_nearest_to_point(int id, String name, int x, int y, int z)
-    {
-        AtomicReference<NPCBean> bean = new AtomicReference<>();
-
-
-        // this is running on client thread so npcs dont mutate state while we're looking at them
-        wrapper.run(() -> {
-            List<NPC> npcs = client.getNpcs();
-            List<NPC> filtered = filter(npcs, id, name);
-            NPC nearest = nearestToPoint(filtered, new WorldPoint(x, y, z));
-            bean.set(NPCBean.fromNPC(nearest, client));
-        });
-
-        return gson.toJson(bean.get());
-    }
 
     public List<NPC> filter(List<NPC> npcs, int id, String name)
     {
@@ -148,6 +142,9 @@ public class NPCController implements Controller
 
         for (NPC npc : npcs)
         {
+            if(npc.getName() == null) {
+                continue;
+            }
             if ((id == -1 || npc.getId() == id) && (name.equals("") || npc.getName().equals(name)))
             {
                 filtered.add(npc);

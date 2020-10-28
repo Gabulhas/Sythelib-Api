@@ -43,13 +43,13 @@ public class NPCBean
     PositionBean pos;
     int index;
     int id;
+    int animation;
     CanvasBean canvas;
 
     public static NPCBean fromNPC(NPC npc, Client client)
     {
         String interacting = npc.getInteracting() != null && npc.getInteracting().getName() != null ? npc.getInteracting().getName() : "";
         Shape clickbox = Perspective.getClickbox(client, npc.getModel(), npc.getOrientation(), npc.getLocalLocation());
-
         return new NPCBean(
                 npc.getName(),
                 npc.getCombatLevel(),
@@ -59,6 +59,7 @@ public class NPCBean
                 PositionBean.fromWorldPoint(npc.getWorldLocation()),
                 npc.getIndex(),
                 npc.getId(),
+                npc.getAnimation(),
                 CanvasBean.fromClickbox(clickbox)
         );
     }

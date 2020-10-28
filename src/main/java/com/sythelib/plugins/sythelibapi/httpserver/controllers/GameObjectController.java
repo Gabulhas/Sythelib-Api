@@ -111,47 +111,36 @@ public class GameObjectController implements Controller
 
         if (x == -1 || y == -1)
         {
-
-            return gameobjects_nearst_to_player(id, name);
+            return gameobjects_nearst_aux(id, name, client.getLocalPlayer().getWorldLocation());
         }
-        return gameobjects_nearst_to_point(id, name, x, y, z);
-
+        return gameobjects_nearst_aux(id, name, new WorldPoint(x, y, z));
 
     }
 
-    public String gameobjects_nearst_to_player(int id, String name)
+    public String gameobjects_nearst_aux(int id, String name, WorldPoint point)
     {
         AtomicReference<GameObjectBean> bean = new AtomicReference<>();
         wrapper.run(() ->
         {
             Set<GameObject> objects = getGameObjects(id, name, client);
-            GameObject nearestGameObject = nearestToPoint(objects, client.getLocalPlayer().getWorldLocation());
-            bean.set(GameObjectBean.fromGameObject(nearestGameObject, client));
+            GameObject nearestGameObject = nearestToPoint(objects, point);
+            if (nearestGameObject == null)
+            {
+                bean.set(null);
+            } else
+            {
+                bean.set(GameObjectBean.fromGameObject(nearestGameObject, client));
+            }
 
         });
-
-        return gson.toJson(bean);
-    }
-
-    public String gameobjects_nearst_to_point(int id, String name, int x, int y, int z)
-    {
-        AtomicReference<GameObjectBean> bean = new AtomicReference<>();
-
-        wrapper.run(() ->
+        GameObjectBean finalBean = bean.get();
+        if (finalBean == null)
         {
-            Set<GameObject> objects = getGameObjects(id, name, client);
-            GameObject nearestGameObject = nearestToPoint(objects, new WorldPoint(x, y, z));
-            bean.set(GameObjectBean.fromGameObject(nearestGameObject, client));
-
-        });
-
-        if (bean == null)
-        {
-
-            return gson.toJson(ErrorBean.from("number format exception parsing a parameter"));
+            return gson.toJson(ErrorBean.from("not found"));
         }
-        return gson.toJson(bean);
+        return gson.toJson(finalBean);
     }
+
 
     private void gameObjectsToBeansList(Client client, Set<GameObject> objects, List<GameObjectBean> list)
     {

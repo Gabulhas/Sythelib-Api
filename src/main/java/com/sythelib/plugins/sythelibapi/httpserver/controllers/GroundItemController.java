@@ -79,42 +79,37 @@ public class GroundItemController implements Controller
 
         if (x == -1 || y == -1)
         {
-
-            return grounditems_nearest_to_player(id, name);
+            return grounditems_nearest_aux(id, name, client.getLocalPlayer().getWorldLocation());
         }
-        return grounditems_nearest_to_point(id, name, x, y, z);
+        return grounditems_nearest_aux(id, name, new WorldPoint(x, y, z));
 
 
     }
 
-    public String grounditems_nearest_to_player(int id, String name)
+    public String grounditems_nearest_aux(int id, String name, WorldPoint point)
     {
         AtomicReference<GroundObjectBean> bean = new AtomicReference<>();
 
         wrapper.run(() ->
         {
             Set<TileItem> objects = getTileItems(id, name, client);
-            TileItem nearestTileItem = nearestToPoint(objects, client.getLocalPlayer().getWorldLocation());
-            bean.set(GroundObjectBean.fromGroundObject(nearestTileItem, client));
+            TileItem nearestTileItem = nearestToPoint(objects, point);
+            if (nearestTileItem == null)
+            {
+                bean.set(null);
+            } else
+            {
+                bean.set(GroundObjectBean.fromGroundObject(nearestTileItem, client));
+            }
         });
 
-        return gson.toJson(bean.get());
-    }
-
-    public String grounditems_nearest_to_point(int id, String name, int x, int y, int z)
-    {
-        AtomicReference<GroundObjectBean> bean = new AtomicReference<>();
-
-
-        wrapper.run(() ->
+        if (bean.get() == null)
         {
-            Set<TileItem> objects = getTileItems(id, name, client);
-            TileItem nearestTileItem = nearestToPoint(objects, new WorldPoint(x, y, z));
-            bean.set(GroundObjectBean.fromGroundObject(nearestTileItem, client));
-        });
-
+            return gson.toJson(ErrorBean.from("not found"));
+        }
         return gson.toJson(bean.get());
     }
+
 
     private void groundItemsToBeansList(Client client, Set<TileItem> objects, List<GroundObjectBean> list)
     {
