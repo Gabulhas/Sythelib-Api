@@ -39,7 +39,7 @@ public class TileSceneController implements Controller
     @Inject
     private ClientThreadWrapper wrapper;
 
-    @Route("/tilescene")
+    @Route("/tileminimap")
     public String tilescene(Map<String, String> params)
     {
 

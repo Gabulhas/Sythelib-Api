@@ -42,7 +42,7 @@ public class GroundItemController implements Controller
         try
         {
             id = Integer.parseInt(params.getOrDefault("id", "-1"));
-            name = params.getOrDefault("name", "").replace("%20", " ");
+            name = params.getOrDefault("name", "").replace("%20", " ").strip();
 
         } catch (NumberFormatException ex)
         {
@@ -67,7 +67,7 @@ public class GroundItemController implements Controller
         try
         {
             id = Integer.parseInt(params.getOrDefault("id", "-1"));
-            name = params.getOrDefault("name", "").replace("%20", " ");
+            name = params.getOrDefault("name", "").replace("%20", " ").strip();
             x = Integer.parseInt(params.getOrDefault("x", "-1"));
             y = Integer.parseInt(params.getOrDefault("y", "-1"));
             z = Integer.parseInt(params.getOrDefault("z", "0"));

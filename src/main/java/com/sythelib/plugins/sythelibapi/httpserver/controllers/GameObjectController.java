@@ -31,6 +31,7 @@ import com.sythelib.plugins.sythelibapi.beans.GameObjectBean;
 import com.sythelib.plugins.sythelibapi.httpserver.ClientThreadWrapper;
 import com.sythelib.plugins.sythelibapi.httpserver.Controller;
 import com.sythelib.plugins.sythelibapi.httpserver.Route;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameObject;
 import net.runelite.api.Scene;
@@ -48,6 +49,8 @@ import java.util.function.Consumer;
 
 import static com.sythelib.plugins.sythelibapi.utils.distanceUtils.nearestToPoint;
 
+
+@Slf4j
 public class GameObjectController implements Controller
 {
     @Inject
@@ -72,13 +75,13 @@ public class GameObjectController implements Controller
         try
         {
             id = Integer.parseInt(params.getOrDefault("id", "-1"));
-            name = params.getOrDefault("name", "").replace("%20", " ");
-            ;
+            name = params.getOrDefault("name", "").replace("%20", " ").strip();
 
         } catch (NumberFormatException ex)
         {
             return gson.toJson(ErrorBean.from("number format exception parsing " + params.get("id")));
         }
+        log.info(name, id);
 
         wrapper.run(() ->
         {
@@ -99,7 +102,7 @@ public class GameObjectController implements Controller
         try
         {
             id = Integer.parseInt(params.getOrDefault("id", "-1"));
-            name = params.getOrDefault("name", "").replace("%20", " ");
+            name = params.getOrDefault("name", "").replace("%20", " ").strip();
             x = Integer.parseInt(params.getOrDefault("x", "-1"));
             y = Integer.parseInt(params.getOrDefault("y", "-1"));
             z = Integer.parseInt(params.getOrDefault("z", "0"));

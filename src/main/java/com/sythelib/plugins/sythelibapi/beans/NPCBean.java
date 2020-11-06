@@ -48,6 +48,8 @@ public class NPCBean
 
     public static NPCBean fromNPC(NPC npc, Client client)
     {
+
+
         String interacting = npc.getInteracting() != null && npc.getInteracting().getName() != null ? npc.getInteracting().getName() : "";
         Shape clickbox = Perspective.getClickbox(client, npc.getModel(), npc.getOrientation(), npc.getLocalLocation());
         return new NPCBean(
