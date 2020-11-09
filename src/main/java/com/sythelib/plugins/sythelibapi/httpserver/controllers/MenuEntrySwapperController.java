@@ -43,8 +43,8 @@ public class MenuEntrySwapperController implements Controller
         try
         {
             priority = Integer.parseInt(params.getOrDefault("priority", "-1"));
-            option = params.getOrDefault("option", "").replace("%20", "");
-            target = params.getOrDefault("target", "").replace("%20", "");
+            option = params.getOrDefault("option", "").replace("%20", " ");
+            target = params.getOrDefault("target", "").replace("%20", " ");
 
         } catch (NumberFormatException ex)
         {
@@ -54,8 +54,7 @@ public class MenuEntrySwapperController implements Controller
         {
             return gson.toJson(ErrorBean.from("Get parameter missing. Required: priority, option, target"));
         }
-        option = option.replace("%20", " ");
-        target = target.replace("%20", " ");
+
         log.info(priority + " " + option + " " + target);
         final AbstractComparableEntry prioEntry = newBaseComparableEntry(option, target);
         customSwaps.put(prioEntry, priority);
@@ -72,15 +71,13 @@ public class MenuEntrySwapperController implements Controller
         String option;
         String target;
 
-        option = params.getOrDefault("option", "");
-        target = params.getOrDefault("target", "");
+        option = params.getOrDefault("option", "").replace("%20", " ");
+        target = params.getOrDefault("target", "").replace("%20", " ");
 
         if (option.equals("") || target.equals(""))
         {
             return gson.toJson(ErrorBean.from("Get parameter missing. Required: priority, option, target"));
         }
-        option = option.replace("%20", " ");
-        target = target.replace("%20", " ");
 
         final AbstractComparableEntry prioEntry = newBaseComparableEntry(option, target);
         customSwaps.remove(prioEntry);
@@ -96,15 +93,13 @@ public class MenuEntrySwapperController implements Controller
         String option;
         String target;
 
-        option = params.getOrDefault("option", "");
-        target = params.getOrDefault("target", "");
+        option = params.getOrDefault("option", "").replace("%20", " ");
+        target = params.getOrDefault("target", "").replace("%20", " ");
 
         if (option.equals("") || target.equals(""))
         {
             return gson.toJson(ErrorBean.from("Get parameter missing. Required: priority, option, target"));
         }
-        option = option.replace("%20", " ");
-        target = target.replace("%20", " ");
 
         final AbstractComparableEntry prioEntry = newBaseComparableEntry(option, target);
 
