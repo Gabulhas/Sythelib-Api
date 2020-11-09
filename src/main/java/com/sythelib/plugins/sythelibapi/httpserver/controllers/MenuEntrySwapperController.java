@@ -43,8 +43,8 @@ public class MenuEntrySwapperController implements Controller
         try
         {
             priority = Integer.parseInt(params.getOrDefault("priority", "-1"));
-            option = params.getOrDefault("option", "");
-            target = params.getOrDefault("target", "");
+            option = params.getOrDefault("option", "").replace("%20", "");
+            target = params.getOrDefault("target", "").replace("%20", "");
 
         } catch (NumberFormatException ex)
         {
