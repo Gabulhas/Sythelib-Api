@@ -22,38 +22,36 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.sythelib.plugins.sythelibapi.beans;
 
+import java.awt.Shape;
 import lombok.Value;
 import net.runelite.api.Client;
 import net.runelite.api.GameObject;
 import net.runelite.api.ObjectDefinition;
 import net.runelite.api.Perspective;
 
-import java.awt.Shape;
-
 @Value
 public class GameObjectBean
 {
-    int id;
-    String name;
-    PositionBean pos;
-    CanvasBean canvas;
+	int id;
+	String name;
+	PositionBean pos;
+	CanvasBean canvas;
 
-    public static GameObjectBean fromGameObject(GameObject object, Client client)
-    {
-        Shape clickbox = Perspective.getClickbox(client, object.getModel(), object.getRsOrientation(), object.getLocalLocation());
-        ObjectDefinition def = client.getObjectDefinition(object.getId());
-        if (def.getImpostorIds() != null)
-        {
-            def = def.getImpostor();
-        }
-        if (def == null)
-        {
-            return null;
-        }
-        return new GameObjectBean(def.getId(), def.getName(), PositionBean.fromWorldPoint(object.getWorldLocation()), CanvasBean.fromClickbox(clickbox));
-    }
+	public static GameObjectBean fromGameObject(GameObject object, Client client)
+	{
+		Shape clickbox = Perspective.getClickbox(client, object.getModel(), object.getRsOrientation(), object.getLocalLocation());
+		ObjectDefinition def = client.getObjectDefinition(object.getId());
+		if (def.getImpostorIds() != null)
+		{
+			def = def.getImpostor();
+		}
+		if (def == null)
+		{
+			return null;
+		}
+		return new GameObjectBean(def.getId(), def.getName(), PositionBean.fromWorldPoint(object.getWorldLocation()), CanvasBean.fromClickbox(clickbox));
+	}
 
 }

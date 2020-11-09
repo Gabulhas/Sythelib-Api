@@ -22,47 +22,43 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.sythelib.plugins.sythelibapi.beans;
 
+import java.awt.Shape;
 import lombok.Value;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
 import net.runelite.api.Perspective;
 
-import java.awt.Shape;
-
 @Value
 public class NPCBean
 {
-    String name;
-    int combatLvl;
-    int healthRatio;
-    int healthScale;
-    String interacting;
-    PositionBean pos;
-    int index;
-    int id;
-    int animation;
-    CanvasBean canvas;
+	String name;
+	int combatLvl;
+	int healthRatio;
+	int healthScale;
+	String interacting;
+	PositionBean pos;
+	int index;
+	int id;
+	int animation;
+	CanvasBean canvas;
 
-    public static NPCBean fromNPC(NPC npc, Client client)
-    {
-
-
-        String interacting = npc.getInteracting() != null && npc.getInteracting().getName() != null ? npc.getInteracting().getName() : "";
-        Shape clickbox = Perspective.getClickbox(client, npc.getModel(), npc.getOrientation(), npc.getLocalLocation());
-        return new NPCBean(
-                npc.getName(),
-                npc.getCombatLevel(),
-                npc.getHealthRatio(),
-                npc.getHealthScale(),
-                interacting,
-                PositionBean.fromWorldPoint(npc.getWorldLocation()),
-                npc.getIndex(),
-                npc.getId(),
-                npc.getAnimation(),
-                CanvasBean.fromClickbox(clickbox)
-        );
-    }
+	public static NPCBean fromNPC(NPC npc, Client client)
+	{
+		String interacting = npc.getInteracting() != null && npc.getInteracting().getName() != null ? npc.getInteracting().getName() : "";
+		Shape clickbox = Perspective.getClickbox(client, npc.getModel(), npc.getOrientation(), npc.getLocalLocation());
+		return new NPCBean(
+			npc.getName(),
+			npc.getCombatLevel(),
+			npc.getHealthRatio(),
+			npc.getHealthScale(),
+			interacting,
+			PositionBean.fromWorldPoint(npc.getWorldLocation()),
+			npc.getIndex(),
+			npc.getId(),
+			npc.getAnimation(),
+			CanvasBean.fromClickbox(clickbox)
+		);
+	}
 }

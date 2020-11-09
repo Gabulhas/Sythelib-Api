@@ -5,12 +5,12 @@ import lombok.Value;
 @Value
 public class SuccessBean
 {
-    String success;
+	String success;
 
-    public static SuccessBean from(String message)
-    {
-        return new SuccessBean(message);
-    }
+	public static SuccessBean from(String message)
+	{
+		return new SuccessBean(message);
+	}
 }
 
 

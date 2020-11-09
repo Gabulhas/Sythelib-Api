@@ -22,7 +22,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.sythelib.plugins.sythelibapi.httpserver.controllers;
 
 import com.google.gson.Gson;
@@ -31,127 +30,112 @@ import com.sythelib.plugins.sythelibapi.beans.NPCBean;
 import com.sythelib.plugins.sythelibapi.httpserver.ClientThreadWrapper;
 import com.sythelib.plugins.sythelibapi.httpserver.Controller;
 import com.sythelib.plugins.sythelibapi.httpserver.Route;
-import net.runelite.api.Client;
-import net.runelite.api.NPC;
-import net.runelite.api.coords.WorldPoint;
-
-import javax.inject.Inject;
-import java.util.ArrayList;
+import static com.sythelib.plugins.sythelibapi.utils.DistanceUtils.*;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
-
-import static com.sythelib.plugins.sythelibapi.utils.distanceUtils.nearestToPoint;
+import javax.inject.Inject;
+import net.runelite.api.Client;
+import net.runelite.api.NPC;
+import net.runelite.api.NPCDefinition;
+import net.runelite.api.coords.WorldPoint;
 
 public class NPCController implements Controller
 {
-    @Inject
-    private Gson gson;
-    @Inject
-    private Client client;
-    @Inject
-    private ClientThreadWrapper wrapper;
+	@Inject
+	private Gson gson;
+	@Inject
+	private Client client;
+	@Inject
+	private ClientThreadWrapper wrapper;
 
-    @Route("/npcs")
-    public String npcs(Map<String, String> params)
-    {
-        int id;
-        String name;
-        try
-        {
-            id = Integer.parseInt(params.getOrDefault("id", "-1"));
-            name = params.getOrDefault("name", "").replace("%20", " ").strip();
+	@Route("/npcs")
+	public String npcs(Map<String, String> params)
+	{
+		int id;
+		String name;
+		try
+		{
+			id = Integer.parseInt(params.getOrDefault("id", "-1"));
+			name = params.get("name");
+		}
+		catch (NumberFormatException ex)
+		{
+			return gson.toJson(ErrorBean.from("number format exception parsing " + params.get("id")));
+		}
+		AtomicReference<List<NPCBean>> beans = new AtomicReference<>();
 
-        } catch (NumberFormatException ex)
-        {
-            return gson.toJson(ErrorBean.from("number format exception parsing " + params.get("id")));
-        }
-        AtomicReference<List<NPCBean>> beans = new AtomicReference<>();
+		// this is running on client thread so npcs dont mutate state while we're looking at them
+		wrapper.run(() ->
+		{
+			List<NPC> filtered = getNpcsFiltered(id, name);
+			beans.set(filtered.stream().map(npc -> NPCBean.fromNPC(npc, client)).collect(Collectors.toList()));
+		});
 
-        // this is running on client thread so npcs dont mutate state while we're looking at them
-        wrapper.run(() -> {
-            List<NPC> npcs = client.getNpcs();
-            List<NPC> filtered = filter(npcs, id, name);
-            beans.set(filtered.stream().map(npc -> NPCBean.fromNPC(npc, client)).collect(Collectors.toList()));
-        });
+		return gson.toJson(beans.get());
+	}
 
-        return gson.toJson(beans.get());
-    }
+	@Route("/npcs/nearest")
+	public String npcs_nearest(Map<String, String> params)
+	{
+		int id, x, y, z;
+		String name;
+		try
+		{
+			id = Integer.parseInt(params.getOrDefault("id", "-1"));
+			name = params.get("name");
+			x = Integer.parseInt(params.getOrDefault("x", "-1"));
+			y = Integer.parseInt(params.getOrDefault("y", "-1"));
+			z = Integer.parseInt(params.getOrDefault("z", "0"));
+		}
+		catch (NumberFormatException ex)
+		{
+			return gson.toJson(ErrorBean.from("number format exception parsing " + params.get("id")));
+		}
 
-    @Route("/npcs/nearest")
-    public String npcs_nearest(Map<String, String> params)
-    {
+		if (x == -1 || y == -1)
+		{
+			return npcs_nearest_aux(id, name, client.getLocalPlayer().getWorldLocation());
+		}
+		return npcs_nearest_aux(id, name, new WorldPoint(x, y, z));
+	}
 
-        int id, x, y, z;
-        String name;
-        try
-        {
-            id = Integer.parseInt(params.getOrDefault("id", "-1"));
-            name = params.getOrDefault("name", "").replace("%20", " ").strip();
-            x = Integer.parseInt(params.getOrDefault("x", "-1"));
-            y = Integer.parseInt(params.getOrDefault("y", "-1"));
-            z = Integer.parseInt(params.getOrDefault("z", "0"));
+	public String npcs_nearest_aux(int id, String name, WorldPoint point)
+	{
+		AtomicReference<NPCBean> bean = new AtomicReference<>();
 
-        } catch (NumberFormatException ex)
-        {
-            return gson.toJson(ErrorBean.from("number format exception parsing " + params.get("id")));
-        }
+		wrapper.run(() ->
+		{
+			List<NPC> filtered = getNpcsFiltered( id, name);
+			NPC nearest = nearestToPoint(filtered, point);
+			if (nearest == null)
+			{
+				bean.set(null);
+			}
+			else
+			{
+				bean.set(NPCBean.fromNPC(nearest, client));
+			}
+		});
+		if (bean.get() == null)
+		{
+			return gson.toJson(ErrorBean.from("not found"));
+		}
 
-        if (x == -1 || y == -1)
-        {
-            return npcs_nearest_aux(id, name, client.getLocalPlayer().getWorldLocation());
-        }
-        return npcs_nearest_aux(id, name, new WorldPoint(x, y, z));
+		return gson.toJson(bean.get());
+	}
 
-
-    }
-
-    public String npcs_nearest_aux(int id, String name, WorldPoint point)
-    {
-
-        AtomicReference<NPCBean> bean = new AtomicReference<>();
-
-        wrapper.run(() -> {
-
-            List<NPC> npcs = client.getNpcs();
-            List<NPC> filtered = filter(npcs, id, name);
-            NPC nearest = nearestToPoint(filtered, point);
-            if (nearest == null)
-            {
-                bean.set(null);
-            } else
-            {
-                bean.set(NPCBean.fromNPC(nearest, client));
-            }
-        });
-        if (bean.get() == null)
-        {
-            return gson.toJson(ErrorBean.from("not found"));
-        }
-
-
-        return gson.toJson(bean.get());
-    }
-
-
-    public List<NPC> filter(List<NPC> npcs, int id, String name)
-    {
-
-        List<NPC> filtered = new ArrayList<>();
-
-        for (NPC npc : npcs)
-        {
-            if(npc.getName() == null) {
-                continue;
-            }
-            if ((id == -1 || npc.getId() == id) && (name.equals("") || npc.getName().equals(name)))
-            {
-                filtered.add(npc);
-            }
-        }
-        return filtered;
-    }
+	public List<NPC> getNpcsFiltered(int id, String name)
+	{
+		return client.getNpcs().stream().filter(npc -> {
+			NPCDefinition def = npc.getTransformedDefinition();
+			return def != null && !def.getName().equals("null") &&
+				(name == null || Objects.equals(def.getName(), name)) &&
+				(id == -1 || def.getId() == id);
+		}).collect(Collectors.toUnmodifiableList());
+	}
 }
 
 

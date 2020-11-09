@@ -22,7 +22,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.sythelib.plugins.sythelibapi.beans;
 
 import lombok.Value;
@@ -38,6 +37,6 @@ public class AnimationBean
 
 	public static AnimationBean fromActor(Actor actor)
 	{
-		return new AnimationBean(actor.getAnimation(),actor.getSpotAnimation() ,actor.getPoseAnimation(), actor.getIdlePoseAnimation());
+		return new AnimationBean(actor.getAnimation(), actor.getSpotAnimation(), actor.getPoseAnimation(), actor.getIdlePoseAnimation());
 	}
 }

@@ -22,54 +22,52 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package com.sythelib.plugins.sythelibapi.beans;
 
+import java.awt.Shape;
 import lombok.Value;
 import net.runelite.api.Client;
 import net.runelite.api.Perspective;
 import net.runelite.api.Player;
 
-import java.awt.Shape;
-
 @Value
 public class PlayerBean
 {
-    boolean localPlayer;
-    String name;
-    int id;
-    PositionBean pos;
-    int healthRatio;
-    int healthScale;
-    int level;
-    String interacting;
-    int interactingID;
-    int overhead;
-    boolean skulled;
-    EquipmentBean equipment;
-    CanvasBean canvas;
+	boolean localPlayer;
+	String name;
+	int id;
+	PositionBean pos;
+	int healthRatio;
+	int healthScale;
+	int level;
+	String interacting;
+	int interactingID;
+	int overhead;
+	boolean skulled;
+	EquipmentBean equipment;
+	CanvasBean canvas;
 
-    public static PlayerBean fromPlayer(Player player, Client client)
-    {
-        boolean isLocalPlayer = player.getPlayerId() == client.getLocalPlayerIndex();
+	public static PlayerBean fromPlayer(Player player, Client client)
+	{
+		boolean isLocalPlayer = player.getPlayerId() == client.getLocalPlayerIndex();
 
-        Shape clickbox = Perspective.getClickbox(client, player.getModel(), player.getOrientation(), player.getLocalLocation());
-        return new PlayerBean(
-                isLocalPlayer,
-                player.getName() == null ? "" : player.getName(),
-                player.getPlayerId(),
-                PositionBean.fromWorldPoint(player.getWorldLocation()),
-                player.getHealthRatio(),
-                player.getHealthScale(),
-                player.getCombatLevel(),
-                player.getInteracting() != null ? player.getInteracting().getName() : "",
-                player.getRSInteracting(),
-                player.getOverheadIcon() == null ? 0 : player.getOverheadIcon().ordinal(),
-                player.getSkullIcon() != null,
-                isLocalPlayer ?
-                        EquipmentBean.fromClient(client) :
-                        EquipmentBean.fromPlayerAppearance(player.getPlayerAppearance(), client),
-                CanvasBean.fromClickbox(clickbox)
-        );
-    }
+		Shape clickbox = Perspective.getClickbox(client, player.getModel(), player.getOrientation(), player.getLocalLocation());
+		return new PlayerBean(
+			isLocalPlayer,
+			player.getName() == null ? "" : player.getName(),
+			player.getPlayerId(),
+			PositionBean.fromWorldPoint(player.getWorldLocation()),
+			player.getHealthRatio(),
+			player.getHealthScale(),
+			player.getCombatLevel(),
+			player.getInteracting() != null ? player.getInteracting().getName() : "",
+			player.getRSInteracting(),
+			player.getOverheadIcon() == null ? 0 : player.getOverheadIcon().ordinal(),
+			player.getSkullIcon() != null,
+			isLocalPlayer ?
+				EquipmentBean.fromClient(client) :
+				EquipmentBean.fromPlayerAppearance(player.getPlayerAppearance(), client),
+			CanvasBean.fromClickbox(clickbox)
+		);
+	}
 }

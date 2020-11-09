@@ -9,64 +9,64 @@ import net.runelite.api.Skill;
 @Value
 public class SkillsBean
 {
-    Skill_aux Attack;
-    Skill_aux Defense;
-    Skill_aux Strength;
-    Skill_aux Hitpoints;
-    Skill_aux Ranged;
-    Skill_aux Prayer;
-    Skill_aux Magic;
-    Skill_aux Cooking;
-    Skill_aux Woodcutting;
-    Skill_aux Fletching;
-    Skill_aux Fishing;
-    Skill_aux Firemaking;
-    Skill_aux Crafting;
-    Skill_aux Smithing;
-    Skill_aux Mining;
-    Skill_aux Herblore;
-    Skill_aux Agility;
-    Skill_aux Thieving;
-    Skill_aux Slayer;
-    Skill_aux Farming;
-    Skill_aux Runecrafting;
-    Skill_aux Hunter;
-    Skill_aux Construction;
+	SkillBean Attack;
+	SkillBean Defense;
+	SkillBean Strength;
+	SkillBean Hitpoints;
+	SkillBean Ranged;
+	SkillBean Prayer;
+	SkillBean Magic;
+	SkillBean Cooking;
+	SkillBean Woodcutting;
+	SkillBean Fletching;
+	SkillBean Fishing;
+	SkillBean Firemaking;
+	SkillBean Crafting;
+	SkillBean Smithing;
+	SkillBean Mining;
+	SkillBean Herblore;
+	SkillBean Agility;
+	SkillBean Thieving;
+	SkillBean Slayer;
+	SkillBean Farming;
+	SkillBean Runecrafting;
+	SkillBean Hunter;
+	SkillBean Construction;
 
+	public static SkillsBean fromClient(Client client)
+	{
+		SkillBean NULL = SkillBean.NULL;
+		SkillBean[] skill_beans = new SkillBean[]{NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+		int idx = 0;
+		for (Skill skill : Skill.values())
+		{
+			if (skill.equals(Skill.OVERALL))
+			{
+				continue;
+			}
+			String name = skill.getName();
+			int level = client.getRealSkillLevel(skill);
+			int boostedLevel = client.getBoostedSkillLevel(skill);
+			float xp = client.getSkillExperience(skill);
+			skill_beans[idx++] = SkillBean.from(level, boostedLevel, xp);
 
-
-    public static SkillsBean fromClient(Client client)
-    {
-        Skill_aux NULL = Skill_aux.NULL;
-        Skill_aux[] skill_auxes = new Skill_aux[] {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-        int idx = 0;
-        for (Skill skill : Skill.values())
-        {
-            if (skill.equals(Skill.OVERALL)) continue;
-            String name = skill.getName();
-            int level = client.getRealSkillLevel(skill);
-            int boostedLevel = client.getBoostedSkillLevel(skill);
-            float xp = client.getSkillExperience(skill);
-            skill_auxes[idx++] = Skill_aux.from(level, boostedLevel ,xp);
-
-        }
-        return new SkillsBean(skill_auxes[0], skill_auxes[1], skill_auxes[2], skill_auxes[3], skill_auxes[4], skill_auxes[5], skill_auxes[6], skill_auxes[7], skill_auxes[8], skill_auxes[9], skill_auxes[10], skill_auxes[11], skill_auxes[12], skill_auxes[13], skill_auxes[14], skill_auxes[15], skill_auxes[16], skill_auxes[17], skill_auxes[18], skill_auxes[19], skill_auxes[20], skill_auxes[21], skill_auxes[22]);
-    }
+		}
+		return new SkillsBean(skill_beans[0], skill_beans[1], skill_beans[2], skill_beans[3], skill_beans[4], skill_beans[5], skill_beans[6], skill_beans[7], skill_beans[8], skill_beans[9], skill_beans[10], skill_beans[11], skill_beans[12], skill_beans[13], skill_beans[14], skill_beans[15], skill_beans[16], skill_beans[17], skill_beans[18], skill_beans[19], skill_beans[20], skill_beans[21], skill_beans[22]);
+	}
 
 }
 
 @Value
-class Skill_aux
+class SkillBean
 {
-    public static final Skill_aux NULL = new Skill_aux(-1, -1,  -1);
+	public static final SkillBean NULL = new SkillBean(-1, -1, -1);
 
-    int level;
-    int boostedLevel;
-    float xp;
+	int level;
+	int boostedLevel;
+	float xp;
 
-
-    public static Skill_aux from(int level, int boostedLevel, float xp)
-    {
-        return new Skill_aux(level, boostedLevel, xp);
-    }
+	public static SkillBean from(int level, int boostedLevel, float xp)
+	{
+		return new SkillBean(level, boostedLevel, xp);
+	}
 }
