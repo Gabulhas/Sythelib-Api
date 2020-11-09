@@ -23,14 +23,14 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val openosrsVersion = "3.4.4"
+val openosrsVersion = "3.5.2"
 
 plugins {
     java
 }
 
 group = "com.sythelib.plugins.sythelibapi"
-version = "1.0.2"
+version = "1.0.3"
 
 project.extra["PluginProvider"] = "sythelib"
 project.extra["ProjectUrl"] = "https://gitlab.com/Gabulhas/sythelib-api"
