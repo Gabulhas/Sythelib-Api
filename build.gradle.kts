@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-val openosrsVersion = "3.5.2"
+val openosrsVersion = "3.5.4"
 
 plugins {
     java
