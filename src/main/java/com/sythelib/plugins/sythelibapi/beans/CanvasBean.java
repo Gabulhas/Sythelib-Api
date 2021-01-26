@@ -25,8 +25,12 @@
 package com.sythelib.plugins.sythelibapi.beans;
 
 import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.RectangularShape;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.geometry.Shapes;
@@ -34,28 +38,25 @@ import net.runelite.api.geometry.SimplePolygon;
 
 @Slf4j
 @Value
-public class CanvasBean
-{
-	List<PolygonBean> polys;
+public class CanvasBean {
+    List<PolygonBean> polys;
 
-	public static CanvasBean fromClickbox(Shape clickbox)
-	{
-		if (clickbox == null)
-		{
-			return null;
-		}
-		if (clickbox instanceof SimplePolygon)
-		{
-			return new CanvasBean(List.of(PolygonBean.fromSimplePolygon((SimplePolygon) clickbox)));
-		}
-		else if (clickbox instanceof Shapes)
-		{
+    public static CanvasBean fromClickbox(Shape clickbox) {
+        if (clickbox == null) {
+            return null;
+        }
+        if (clickbox instanceof SimplePolygon) {
+            return new CanvasBean(List.of(PolygonBean.fromSimplePolygon((SimplePolygon) clickbox)));
+        } else if (clickbox instanceof Shapes) {
+            Shapes<SimplePolygon> list = (Shapes<SimplePolygon>) clickbox;
+            return new CanvasBean(list.getShapes().stream().map(PolygonBean::fromSimplePolygon).collect(Collectors.toList()));
+        } else if (clickbox instanceof Rectangle2D) {
+            List<PolygonBean> polygonBeanList = new ArrayList<>();
+            polygonBeanList.add(PolygonBean.fromRectangle2d((Rectangle2D) clickbox));
+            return new CanvasBean(polygonBeanList);
+        }
 
-			Shapes<SimplePolygon> list = (Shapes<SimplePolygon>) clickbox;
-			return new CanvasBean(list.getShapes().stream().map(PolygonBean::fromSimplePolygon).collect(Collectors.toList()));
-		}
-
-		return null;
-	}
+        return null;
+    }
 
 }

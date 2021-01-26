@@ -24,23 +24,38 @@
  */
 package com.sythelib.plugins.sythelibapi.beans;
 
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.Value;
 import net.runelite.api.geometry.SimplePolygon;
 
 @Value
-public class PolygonBean
-{
-	List<int[]> verts;
+public class PolygonBean {
+    List<int[]> verts;
 
-	public static PolygonBean fromSimplePolygon(SimplePolygon poly)
-	{
-		List<int[]> verts = new ArrayList<>();
-		for (int i = 0; i < poly.size(); i++)
-		{
-			verts.add(new int[]{poly.getX(i), poly.getY(i)});
-		}
-		return new PolygonBean(verts);
-	}
+    public static PolygonBean fromSimplePolygon(SimplePolygon poly) {
+        List<int[]> verts = new ArrayList<>();
+        for (int i = 0; i < poly.size(); i++) {
+            verts.add(new int[]{poly.getX(i), poly.getY(i)});
+        }
+        return new PolygonBean(verts);
+    }
+
+    public static PolygonBean fromRectangle2d(Rectangle2D rectangle2D) {
+	    /*
+	    Change lol, I bet BlueMan has a better solution, probbaly a oneliner
+	     */
+        List<int[]> verts = new ArrayList<>();
+        int[] top_left = {(int) rectangle2D.getMinX(), (int) rectangle2D.getMaxY()};
+        int[] top_right = {(int) rectangle2D.getMaxX(), (int) rectangle2D.getMaxY()};
+        int[] bottom_right = {(int) rectangle2D.getMaxX(), (int) rectangle2D.getMinY()};
+        int[] bottom_left = {(int) rectangle2D.getMinX(), (int) rectangle2D.getMinY()};
+        verts.add(top_left);
+        verts.add(top_right);
+        verts.add(bottom_left);
+        verts.add(bottom_right);
+        return new PolygonBean(verts);
+    }
 }
