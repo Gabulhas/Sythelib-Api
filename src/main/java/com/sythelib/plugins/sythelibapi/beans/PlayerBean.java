@@ -66,7 +66,7 @@ public class PlayerBean
 			player.getSkullIcon() != null,
 			isLocalPlayer ?
 				EquipmentBean.fromClient(client) :
-				EquipmentBean.fromPlayerAppearance(player.getPlayerAppearance(), client),
+				EquipmentBean.fromPlayerAppearance(player.getPlayerComposition(), client),
 			CanvasBean.fromClickbox(clickbox)
 		);
 	}

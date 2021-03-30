@@ -28,7 +28,7 @@ import java.awt.Shape;
 import lombok.Value;
 import net.runelite.api.Client;
 import net.runelite.api.GameObject;
-import net.runelite.api.ObjectDefinition;
+import net.runelite.api.ObjectComposition;
 import net.runelite.api.Perspective;
 
 @Value
@@ -42,7 +42,7 @@ public class GameObjectBean
 	public static GameObjectBean fromGameObject(GameObject object, Client client)
 	{
 		Shape clickbox = Perspective.getClickbox(client, object.getModel(), object.getRsOrientation(), object.getLocalLocation());
-		ObjectDefinition def = client.getObjectDefinition(object.getId());
+		ObjectComposition def = client.getObjectDefinition(object.getId());
 		if (def.getImpostorIds() != null)
 		{
 			def = def.getImpostor();

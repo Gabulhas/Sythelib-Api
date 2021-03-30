@@ -44,7 +44,7 @@ import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameObject;
-import net.runelite.api.ObjectDefinition;
+import net.runelite.api.ObjectComposition;
 import net.runelite.api.Scene;
 import net.runelite.api.Tile;
 import net.runelite.api.coords.WorldPoint;
@@ -156,7 +156,7 @@ public class GameObjectController implements Controller
 	{
 		return getGameObjects(client).stream().filter(object ->
 		{
-			ObjectDefinition def = client.getObjectDefinition(object.getId());
+			ObjectComposition def = client.getObjectDefinition(object.getId());
 			if (def.getImpostorIds() != null)
 			{
 				def = def.getImpostor();

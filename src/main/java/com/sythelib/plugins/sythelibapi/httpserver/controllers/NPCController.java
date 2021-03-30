@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
-import net.runelite.api.NPCDefinition;
+import net.runelite.api.NPCComposition;
 import net.runelite.api.coords.WorldPoint;
 
 public class NPCController implements Controller
@@ -130,7 +130,7 @@ public class NPCController implements Controller
 	public List<NPC> getNpcsFiltered(int id, String name)
 	{
 		return client.getNpcs().stream().filter(npc -> {
-			NPCDefinition def = npc.getTransformedDefinition();
+			NPCComposition def = npc.getTransformedComposition();
 			return def != null && !def.getName().equals("null") &&
 				(name == null || Objects.equals(def.getName(), name)) &&
 				(id == -1 || def.getId() == id);

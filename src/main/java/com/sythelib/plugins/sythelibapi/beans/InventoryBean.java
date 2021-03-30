@@ -29,8 +29,8 @@ import java.util.List;
 import lombok.Value;
 import net.runelite.api.Client;
 import net.runelite.api.Item;
+import net.runelite.api.ItemComposition;
 import net.runelite.api.ItemContainer;
-import net.runelite.api.ItemDefinition;
 
 @Value
 public class InventoryBean
@@ -48,7 +48,7 @@ public class InventoryBean
 		int idx = 0;
 		for (Item item : container.getItems())
 		{
-			ItemDefinition def = client.getItemDefinition(item.getId());
+			ItemComposition def = client.getItemDefinition(item.getId());
 			beans.add(ItemBean.from(item.getId(), item.getQuantity(), def.getName(), idx++));
 		}
 

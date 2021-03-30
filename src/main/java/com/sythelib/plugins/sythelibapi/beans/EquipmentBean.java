@@ -33,7 +33,7 @@ import net.runelite.api.Client;
 import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
-import net.runelite.api.PlayerAppearance;
+import net.runelite.api.PlayerComposition;
 import net.runelite.api.kit.KitType;
 
 @Slf4j
@@ -67,7 +67,7 @@ public class EquipmentBean
 	ItemBean ring;
 	ItemBean ammo;
 
-	public static EquipmentBean fromPlayerAppearance(PlayerAppearance appearance, Client client)
+	public static EquipmentBean fromPlayerAppearance(PlayerComposition appearance, Client client)
 	{
 		ItemBean[] items = new ItemBean[11];
 		int idx = 0;

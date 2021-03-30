@@ -7,7 +7,7 @@ import com.sythelib.plugins.sythelibapi.httpserver.ClientThreadWrapper;
 import com.sythelib.plugins.sythelibapi.httpserver.Controller;
 import com.sythelib.plugins.sythelibapi.httpserver.Route;
 import net.runelite.api.Client;
-import net.runelite.api.ItemDefinition;
+import net.runelite.api.ItemComposition;
 import net.runelite.api.Scene;
 import net.runelite.api.Tile;
 import net.runelite.api.TileItem;
@@ -128,7 +128,7 @@ public class GroundItemController implements Controller
     {
         return getTileItems(client).stream().filter(object ->
         {
-            ItemDefinition def = client.getItemDefinition(object.getId());
+            ItemComposition def = client.getItemDefinition(object.getId());
             return (name == null || Objects.equals(def.getName(), name)) &&
                     (id == -1 || def.getId() == id);
         }).collect(Collectors.toSet());

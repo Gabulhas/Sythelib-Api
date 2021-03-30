@@ -2,7 +2,7 @@ package com.sythelib.plugins.sythelibapi.beans;
 
 import lombok.Value;
 import net.runelite.api.Client;
-import net.runelite.api.ItemDefinition;
+import net.runelite.api.ItemComposition;
 import net.runelite.api.Perspective;
 import net.runelite.api.TileItem;
 
@@ -26,7 +26,7 @@ public class GroundObjectBean
         }
         Shape clickbox = Perspective.getClickbox(client, object.getModel(), 0, object.getTile().getLocalLocation());
 
-        ItemDefinition def = client.getItemDefinition(object.getId());
+        ItemComposition def = client.getItemDefinition(object.getId());
         if (def == null)
         {
             return null;
